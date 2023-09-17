@@ -38,14 +38,14 @@ jobs:
           docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
 
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh/
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh-add ~/.ssh/id_rsa
+      # - name: Set up SSH
+      #   run: |
+      #     mkdir -p ~/.ssh/
+      #     eval "$(ssh-agent -s)"
+      #     echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan -t rsa ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+      #     ssh-add ~/.ssh/id_rsa
 
       - name: Deploy API
         run: |
