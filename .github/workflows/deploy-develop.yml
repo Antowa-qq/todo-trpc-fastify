@@ -6,6 +6,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: antowa-qq
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+  ACTOR: ${{ github.actor }}
 
 jobs:
   setup-and-deploy:
@@ -45,9 +47,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASS_PHRASE }}
-          envs: ${{ github.actor }}, ${{ secrets.TOKEN }}, ${{ env.REGISTRY }}, ${{ env.IMAGE_NAME }}, ${{ github.sha }}
+          envs: GITHUB_TOKEN,ACTOR
           script: |
-            docker login -u ${{ github.actor }} -p ${{ secrets.TOKEN }} ghcr.io
+            docker login -u $ACTOR -p $GITHUB_TOKEN ghcr.io
             docker pull ghcr.io/antowa-qq/todo-trpc-fastify:${{ github.sha }}
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
             docker run -d --restart always --name todo-trpc-fastify -p 3001:3001 -e NODE_ENV=${{ env.NODE_ENV }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
