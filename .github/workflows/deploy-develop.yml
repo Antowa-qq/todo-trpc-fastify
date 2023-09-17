@@ -53,7 +53,45 @@ jobs:
         with:
           host: ${{ env.SERVER_IP }}
           username: root
-          key: ${{ secrets.SSH_KEY }}
+          key: -----BEGIN OPENSSH PRIVATE KEY-----
+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
+2Q8AD39hqst6MTUmcB9UVX3j9PY=
+-----END OPENSSH PRIVATE KEY-----
           passphrase: ssh-anton
           script: |
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
