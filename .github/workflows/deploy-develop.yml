@@ -1,0 +1,51 @@
+name: Deploy Applications
+on:
+  push:
+    branches: [master, test-build]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  setup-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+    steps:
+      - name: Setup environment variables for production
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |
+          echo "NODE_ENV=production" >> $GITHUB_ENV
+          echo "SERVER_IP=46.101.114.237" >> $GITHUB_ENV
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build API Docker image
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }} ./server
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }}
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh/
+          eval "$(ssh-agent -s)"
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+          ssh-add ~/.ssh/id_rsa
+
+      - name: Deploy API
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@${{ env.SERVER_IP }} "
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }}
+            docker stop todo-fastify-trpc || true && docker rm todo-fastify-trpc || true
+            docker run -d --restart always --name todo-fastify-trpc -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}"
