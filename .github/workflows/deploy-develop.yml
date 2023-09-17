@@ -56,8 +56,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ssh-anton
           script: |
-            docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
+            docker login -u Antowa-qq -p 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 ghcr.io
+            docker pull ghcr.io/antowa-qq/todo-trpc-fastify:${{ github.sha }}
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
             docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
 
