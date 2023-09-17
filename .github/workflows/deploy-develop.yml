@@ -54,7 +54,7 @@ jobs:
           user: root
           pass: ssh-anton
 
-      -name: Deploy api
+      - name: Deploy api
         run: | 
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
           docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
