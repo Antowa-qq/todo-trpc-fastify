@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASS_PHRASE }}
-        scripts: |
+          script: |
             docker login -u ${{ github.actor }} -p ${{ secrets.TOKEN }} ghcr.io
             docker pull ghcr.io/antowa-qq/todo-trpc-fastify:${{ github.sha }}
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
