@@ -53,9 +53,10 @@ jobs:
         with:
           host: ${{ env.SERVER_IP }}
           username: root
-          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDCj6c4OmS6XGm5tWmC2OcOBnZ8GV24YO//8matk/Rh1KWh+xF+T31Q7DfvHWXaf+wiVlEViHdNhvlZJsmduCqxv56GY8Wkgo4Fv380e1jKwrmYogfC13SgJhoBaTdayz8TZmKSMKACYXSMf/fA9/7rlhULspNGLbZkw/VKiGd0vcEyUSPJmOsXTiOrOZelcHLI50/8lRAb5J+BD6Uwbhj48RXu5hKaohlOdjVPFYXOmj6t1BLdAzeS8aTLQ+CjWPy2mOdwFVkRZ4R7r5Tcds/hketUIfbPc25S8d+AZwFbpdeNlrWW+bjdpBbgQ7MNaATwr7bVZTflQdE4sWSZrC8vgFnSSvuVRfRnARM6xwb59As797JgH9GH1VefyfCwgbXzcE4/RQ/vbZ+smk+LeOzy5FhuH/44TYWV4udL/yLtsKPbaeAyEzbAp88Af7hPRcEeAV3O68UnYiHlJh4JmC578A4I3NfyyFI2AO2ZAbP8HKVGb0R+zUGWO6yRI8r/6p0= antowa@DESKTOP-B93IQJ7
+          key: ${{ secrets.SSH_KEY }}
           passphrase: ssh-anton
           script: |
+            docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
             docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
