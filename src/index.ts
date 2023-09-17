@@ -19,14 +19,13 @@ server.register(fastifyTRPCPlugin, {
 
 const start = async () => {
   try {
-    server.listen({ port: PORT });
+    server.listen({ port: PORT, host: '0.0.0.0' });
     await connectDB();
     console.log(`=================================`);
     console.log(`======= ENV: ${process.env.NODE_ENV} =======`);
     console.log(`🚀 API is running on ${PORT} port`);
     console.log(`=================================`);
   } catch (err) {
-    console.log('crash');
     console.log(err);
     server.log.error(err);
     process.exit(1);
