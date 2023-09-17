@@ -47,16 +47,29 @@ jobs:
       #     ssh-keyscan -t rsa ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
       #     ssh-add ~/.ssh/id_rsa
 
-      - name: Run sshpass commands
-        uses: matheusvanzan/sshpass-action@v2
+
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.3
         with:
           host: ${{ env.SERVER_IP }}
-          user: root
-          pass: ssh-anton
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ssh-anton
+          script: |
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
+            docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
+            docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
 
-      - name: Deploy api
-        run: | 
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
-          docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
-          docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
+      # - name: Run sshpass commands
+      #   uses: matheusvanzan/sshpass-action@v2
+      #   with:
+      #     host: ${{ env.SERVER_IP }}
+      #     user: root
+      #     pass: ssh-anton
+
+      # - name: Deploy api
+      #   run: | 
+      #     docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
+      #     docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
+      #     docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
 
