@@ -38,18 +38,23 @@ jobs:
           docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
 
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh/
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh-add ~/.ssh/id_rsa
+      # - name: Set up SSH
+      #   run: |
+      #     mkdir -p ~/.ssh/
+      #     eval "$(ssh-agent -s)"
+      #     echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan -t rsa ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+      #     ssh-add ~/.ssh/id_rsa
 
-      - name: Deploy API
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@${{ env.SERVER_IP }} "
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
-            docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
-            docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}"
+      - name: Run sshpass commands
+        uses: matheusvanzan/sshpass-action@v2
+        with:
+          host: ${{ env.SERVER_IP }}
+          user: root
+          pass: ssh-anton
+        run: | 
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
+          docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
+          docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
+          
