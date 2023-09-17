@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 import { UserService } from '@modules/user/user.service';
 

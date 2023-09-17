@@ -1,4 +1,4 @@
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import { TRPCError } from '@trpc/server';
 import { User } from '@prisma/client';
 import { UserService } from '@modules/user/user.service';
