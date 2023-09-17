@@ -53,5 +53,5 @@ jobs:
             docker login -u $ACTOR -p $GITHUB_TOKEN ghcr.io
             docker pull $REGISTRY/$IMAGE_NAME/todo-trpc-fastify:$GITHUB_SHA
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
-            docker run -d --restart always --name todo-trpc-fastify -p 6001:3001 -e NODE_ENV=production -e PORT=6001 $REGISTRY/$IMAGE_NAME/todo-trpc-fastify:$GITHUB_SHA
+            docker run -d --restart always --name todo-trpc-fastify -p 127.0.0.1:6001:3001 -e NODE_ENV=production -e PORT=6001 $REGISTRY/$IMAGE_NAME/todo-trpc-fastify:$GITHUB_SHA
             docker image prune -af
