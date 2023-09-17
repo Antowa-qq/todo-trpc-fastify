@@ -19,7 +19,7 @@ server.register(fastifyTRPCPlugin, {
 
 const start = async () => {
   try {
-    server.listen({ port: PORT, host: '127.0.0.1' });
+    server.listen({ port: PORT });
     await connectDB();
     console.log(`=================================`);
     console.log(`======= ENV: ${process.env.NODE_ENV} =======`);
