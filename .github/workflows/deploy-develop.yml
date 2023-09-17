@@ -31,8 +31,8 @@ jobs:
 
       - name: Build API Docker image
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }}
-          docker push docker push antowaqq/todo-fastify-trpc
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }} ./
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }}
 
       - name: Set up SSH
         run: |
