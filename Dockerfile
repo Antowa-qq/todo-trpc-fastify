@@ -12,9 +12,8 @@ RUN npm ci
 
 COPY . .
 
+RUN npm run prisma:migrate:deploy
 RUN npm run prisma:generate
 RUN npm run build
 
-
 CMD ["npm", "run", "start"]
-
