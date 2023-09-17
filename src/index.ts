@@ -5,7 +5,7 @@ import { context } from './trpc/context';
 import { appRouter } from './trpc/router';
 import { connectDB } from './utils/prisma';
 
-const PORT = 3001;
+const PORT = 6001;
 const PREFIX = '/trpc';
 
 const server = fastify({
