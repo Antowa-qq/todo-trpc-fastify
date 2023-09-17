@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int              @id @default(autoincrement())
+  login          String           @unique
+  name           String
+  password       String
+  refreshToken   String?
+  lists          List[]
+  listPermission ListPermission[]
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+}
+
+model List {
+  id             Int              @id @default(autoincrement())
+  name           String
+  userId         Int
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks          Task[]
+  listPermission ListPermission[]
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id     Int    @id @default(autoincrement())
+  name   String
+  listId Int
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+}
+
+model ListPermission {
+  id          Int                  @id @default(autoincrement())
+  listId      Int
+  userId      Int
+  list        List                 @relation(fields: [listId], references: [id], onDelete: Cascade)
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permissions ListPermissionEnum[]
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+
+  @@unique([listId, userId])
+}
+
+enum ListPermissionEnum {
+  READ
+  UPDATE
+  DELETE
+  CREATE
+}
