@@ -31,8 +31,8 @@ jobs:
 
       - name: Build API Docker image
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }} ./
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }}
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }} ./
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
 
       - name: Set up SSH
         run: |
@@ -46,6 +46,6 @@ jobs:
       - name: Deploy API
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@${{ env.SERVER_IP }} "
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-fastify-trpc:${{ github.sha }}
-            docker stop todo-fastify-trpc || true && docker rm todo-fastify-trpc || true
-            docker run -d --restart always --name todo-fastify-trpc -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}"
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
+            docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
+            docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}"
