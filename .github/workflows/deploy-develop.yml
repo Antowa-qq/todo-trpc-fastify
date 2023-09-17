@@ -1,7 +1,7 @@
 name: Deploy Applications
 on:
   push:
-    branches: [master, test-build]
+    branches: [master]
 
 env:
   REGISTRY: ghcr.io
