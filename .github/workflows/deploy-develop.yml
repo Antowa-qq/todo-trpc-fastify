@@ -53,10 +53,4 @@ jobs:
             docker login -u $ACTOR -p $GITHUB_TOKEN ghcr.io
             docker pull ghcr.io/antowa-qq/todo-trpc-fastify:$GITHUB_SHA
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
-            docker run -d --restart always --name todo-trpc-fastify -p 3001:3001 -e NODE_ENV=production $REGISTRY/$IMAGE_NAME/ads-manager-api:$GITHUB_SHA
-
-      # - name: Deploy api
-      #   run: |
-      #     docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/todo-trpc-fastify:${{ github.sha }}
-      #     docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
-      #     docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
+            docker run -d --restart always --name todo-trpc-fastify -p 3001:3001 -e NODE_ENV=production $REGISTRY/$IMAGE_NAME/todo-trpc-fastify:$GITHUB_SHA
