@@ -54,11 +54,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASS_PHRASE }}
-          script: |
-            docker login -u ${{ github.actor }} -p ${{ secrets.TOKEN }} ghcr.io
-            docker pull ghcr.io/antowa-qq/todo-trpc-fastify:${{ github.sha }}
-            docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
-            docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
+      - run: ls
+      - run: ls -al
+
+            # docker login -u ${{ github.actor }} -p ${{ secrets.TOKEN }} ghcr.io
+            # docker pull ghcr.io/antowa-qq/todo-trpc-fastify:${{ github.sha }}
+            # docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
+            # docker run -d --restart always --name todo-trpc-fastify -p ${{ env.API_PORT }}:3001 -e NODE_ENV=${{ env.NODE_ENV }} -e API_DOMAIN=api-dev-tiktok.starshopapp.com ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/ads-manager-api:${{ github.sha }}
 
       # - name: Run sshpass commands
       #   uses: matheusvanzan/sshpass-action@v2
