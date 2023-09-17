@@ -51,6 +51,6 @@ jobs:
           envs: GITHUB_TOKEN,ACTOR,GITHUB_SHA,IMAGE_NAME,REGISTRY
           script: |
             docker login -u $ACTOR -p $GITHUB_TOKEN ghcr.io
-            docker pull ghcr.io/antowa-qq/todo-trpc-fastify:$GITHUB_SHA
+            docker pull $REGISTRY/$IMAGE_NAME/todo-trpc-fastify:$GITHUB_SHA
             docker stop todo-trpc-fastify || true && docker rm todo-trpc-fastify || true
             docker run -d --restart always --name todo-trpc-fastify -p 3001:3001 -e NODE_ENV=production $REGISTRY/$IMAGE_NAME/todo-trpc-fastify:$GITHUB_SHA
