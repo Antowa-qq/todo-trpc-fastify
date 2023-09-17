@@ -4,7 +4,7 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import { context } from './trpc/context';
 import { appRouter } from './trpc/router';
 
-const PORT = 3000;
+const PORT = 3001;
 const PREFIX = '/trpc';
 
 const server = fastify({
