@@ -3,8 +3,9 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 
 import { context } from './trpc/context';
 import { appRouter } from './trpc/router';
+import { connectDB } from './utils/prisma';
 
-const PORT = 3000;
+const PORT = 6001;
 const PREFIX = '/trpc';
 
 const server = fastify({
@@ -16,10 +17,19 @@ server.register(fastifyTRPCPlugin, {
   trpcOptions: { router: appRouter, createContext: context },
 });
 
-try {
-  server.listen({ port: PORT });
-  console.log(`🚀 API is running on: http://localhost:${PORT}${PREFIX}`);
-} catch (err) {
-  server.log.error(err);
-  process.exit(1);
-}
+const start = async () => {
+  try {
+    server.listen({ port: PORT });
+    await connectDB();
+    console.log(`=================================`);
+    console.log(`======= ENV: ${process.env.NODE_ENV} =======`);
+    console.log(`🚀 API is running on ${PORT} port`);
+    console.log(`=================================`);
+  } catch (err) {
+    console.log(err);
+    server.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
