@@ -18,12 +18,12 @@ server.register(fastifyTRPCPlugin, {
 
 try {
   server.listen({ port: PORT });
-
-  console.log(window.location.hostname);
   console.log(`=================================`);
-  console.log(`======= ENV: ${process.env} =======`);
+  console.log(`======= ENV: ${process.env?.PORT} =======`);
+  console.log(`======= ENV: ${process.env?.NODE_ENV} =======`);
   console.log(`🚀 API is running on: http://localhost:${PORT}${PREFIX}`);
 } catch (err) {
+  console.log(err);
   server.log.error(err);
   process.exit(1);
 }
